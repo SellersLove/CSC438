@@ -1,0 +1,238 @@
+\RequirePackage[l2tabu,orthodox]{nag}  % warn about common LaTeX pitfalls
+\RequirePackage[ascii]{inputenc}  % input is 7-bit ASCII
+\RequirePackage{fixltx2e}  % fix LaTeX2e kernel bugs
+
+\documentclass[11pt,twoside]{article}
+\usepackage{color}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{setspace}
+\makeatletter
+\newcommand{\dotminus}{\mathbin{\text{\@dotminus}}}
+
+\newcommand{\@dotminus}{%
+  \ooalign{\hidewidth\raise1ex\hbox{.}\hidewidth\cr$\m@th-$\cr}%
+}
+\makeatother
+\usepackage{graphicx}
+\graphicspath{ {image/} }
+\usepackage{calc}  % arithmetic in length parameters
+\usepackage{enumitem}  % more control over list formatting
+\usepackage{fancyhdr}  % simpler headers and footers
+\usepackage[margin=1in]{geometry}  % page layout
+\usepackage{lastpage}  % for last page number
+\usepackage{relsize}  % easier font size changes
+\usepackage[normalem]{ulem}  % smarter underlining
+\usepackage{url}  % verb-like typesetting of URLs
+\usepackage{xfrac}  % nicer looking simple fractions for text and math
+\usepackage{longtable}
+\usepackage{tikz}
+\usepackage{array}
+\usepackage{tikz-timing}
+\usetikzlibrary{arrows, shapes, backgrounds,fit}
+\usepackage{tkz-graph}
+% Set up fonts.
+\usepackage[T1]{fontenc}  % use true 8-bit fonts
+\usepackage{slantsc}  % allow slanted small-caps
+\usepackage{microtype}  % perform various font optimizations
+% Use Palatino-based monospace instead of kpfonts' default.
+%\usepackage{newpxtext}
+\ttfamily
+\DeclareFontShape{T1}{\ttdefault}{m}{scsl}{<->ssub*\ttdefault/m/sc}{}
+\DeclareFontShape{T1}{\ttdefault}{b}{scsl}{<->ssub*\ttdefault/b/sc}{}
+% "Kepler" fonts.
+\usepackage[nott,notextcomp]{kpfonts}
+% Use curvier Latin Modern brackets instead of kpfonts' glyphs.
+\DeclareSymbolFont{lmsymb}     {OMS}{lmsy}{m}{n}
+\DeclareSymbolFont{lmlargesymb}{OMX}{lmex}{m}{n}
+\DeclareMathDelimiter{\rbrace}{\mathclose}{lmsymb}{"67}{lmlargesymb}{"09}
+\DeclareMathDelimiter{\lbrace}{\mathopen}{lmsymb}{"66}{lmlargesymb}{"08}
+
+% Page layout: stretch text to fill up page.
+\addtolength\footskip{.25\headheight}
+\flushbottom
+
+% Common list settings.
+
+% Common macros.
+\input{macros}
+\newcommand*\st{\mathrel{|}}  % "such that" for set extension
+
+% Headings.
+\pagestyle{fancy}
+\let\headrule\empty
+\let\footrule\empty
+\lhead{CSC\,418\,H1}
+\chead{\large\scshape Assignment \#\,4}
+\rhead{\scshape Fall 2015}
+\lfoot{\scshape Dept.\@ of Computer Science, University of Toronto,
+       St.~George Campus}
+\cfoot{}
+\rfoot{\scshape page \thepage\space of \pageref{LastPage}}
+
+
+\begin{document}
+\begin{enumerate}[leftmargin=0pt]
+% question 1
+\item 
+	\proc{Proof:}
+	\begin{itemize}[label ={}]
+		\item $\Rightarrow$ Suppose $f(\vec x)$ is a $n$-$ary$ computable function.  Then there exist some program $\{e\}$ computes $f$,  by KNFT we get,
+				\[f(\vec x) = \{e\}(\vec x) = U(\mu yT_n(e,\vec x,y))\]
+		\item Let $graph(f) = \{(\vec x, y) \ | \ y=f(\vec x)\}$,
+		then we can get that, 
+				\[ (\vec x, y)= (x_1,x_2,...,x_n, y) \in graph(f) \iff \exists z(T_n(e,\vec x,z) \wedge U(z)=y) \]
+		\item Hence, let $R(x_1,x_2,...,x_n, y ,z) = T_n(e,x_1,x_2,...,x_n, y,z) \wedge U(z)=y)$. Clearly $R$ is a recursive relation, then $graph(f)$ is r.e. 
+		\item
+		\item $\Leftarrow$  Before formalizing the argument for `if' direction,  let's first give an informal algorithm for computing $f$ from an enumeration of the tuples in $graph(f)$  
+		\item algorithm (for computing $f(\vec x)$):
+		\item \begin{itemize}[label={}]
+			\item  suppose $(a_1, a_2....)$ is a enumeration, where $a_i$ is a $n+1$ tuple.
+			\item for $i = 1...\infty$
+			\item \hskip2pc  if $a_i = (x_1,x_2,...,x_n, y)$ where $  (x_1,x_2,...,x_n) = \vec x$
+			\item \hskip4pc 	\proc {output} $y$
+			\item \hskip2pc end if
+			\item end for
+			\end{itemize}
+		
+		\item Now let's formalize the argument. Suppose $graph(f) = \{(\vec x, y) \ | \ y=f(\vec x)\}$ is r.e., where $f$ is a $n-ary$ function and we want to show that $f(\vec x)$ is computable.  
+		\item Since graph(f) is r.e., then there exist some $n+2$-$ary$ recursive relation $R(\vec x ,z )$such that,
+			 \[(x_1,x_2,...,x_n, y) \in graph(f) \iff \exists z \ R(x_1,x_2,...,x_n, y, z) \]
+		\item Then clearly $f(x_1,x_2,...,x_n) = \mu y (\exists z \ R(x_1,x_2,...,x_n, y, z))$, by Church-Turing Thesis, $f(x_1,x_2,...,x_n)$ is computable.
+	\end{itemize}
+\qed
+% question 2
+\item $\proc {Claim:}$ $A$ is neither recursive nor r.e., $ A^c$ is r.e but not recursive.
+	\begin{itemize}[label = {}]
+	% $A^c not  r.e$
+	\item First we show that $A$ is not r.e. Notice, it suffices to show that
+			\[K^c \leq_m A\] 
+		Thus we want a total computable function $f(x)$ such that
+			\[x \in K^c \iff f(x) \in A \]
+		i.e we want
+			\[ \{x\}_1(x) = \infty \iff range(\{f(x)\}_1) \subseteq ODD\]
+		We can define $f(x)$ implicitly using the S-m-n Theorem as follows:
+			\begin{gather*}
+			\{f(x)\}_1(y) = 
+				\begin{cases}
+				0\cdot\{x\}_1(x)  & \text{if } y \neq 1\\
+				1  & \text{if } y = 1
+				\end{cases}
+			\end{gather*}
+		\item Thus if $\{x\}_1(x)$ is defined, then $range(\{f(x)\}_1) = \{0,1\} \not\subseteq ODD$. 
+		\item But if $\{x\}_1(x)$ is undefined then $range(\{f(x)\}_1) = \{1\} \subseteq ODD$. 
+		\item Hence, $A$ is not r.e.
+	\end{itemize}
+	% $A^c is r.e$
+	\begin{itemize}[label = {}]
+	\item Now we we want to show that $A^c$ is is r.e.
+		\[A^c = \{x|  range(\{x\}_1) \not\subseteq ODD\}\]
+	\item Notice that $x \in A^c$ iff there is some input $u$ and some $v$ such that $v$ codes a halting computation of program $\{x\}$ on input $u$, and $U(v)$ is not a odd. Using the T-predicate, we have,
+		\[x \in A^c \leftrightarrow \exists u \ \exists v \ [T(x,u,v) \wedge  EVEN(U(v))] \]
+		\[ EVEN(x) = \exists y\leq x \ \ 2y = x\]
+	\item using a pairing function  to combine both existential quantifiers into one quantifier,
+		\[ x \in A^c \leftrightarrow \exists z \ [T(x,K(z),L(z)) \wedge EVEN( U(L(z)) )]\]
+	\item We get the form $x \in A^c \leftrightarrow \exists z \ R(x,z)$ where $R$ is recursive. Hence $A^c$ is r.e. 
+	\end{itemize}
+	It follows that $A$ is not recursive, and hence $A^c$ is not recursive. It also follows that $A$ is not r.e., because then  $A$ would be recursive. \\
+\qed
+% question 3
+\item \proc{Solution:}
+	\begin{itemize}[label ={}]
+		\item Let $R(x,y)$ be a recursive relation, define $A = \{x|f(x) \ is \ defined\}$, where $f(x) = \mu y R(x,y)$.
+		\item Then we have,
+			 \[x \in A \iff f(x) \ is \ defined \iff  \exists y \ R(x,y)\]
+		\item	 Clearly $f$ is computable. Suppose some program $\{e\}$ computes $f$, then using KNFT we get,
+			\[f(x) = \{e\}_1(x) = U(\mu z T(e,x,z))\]
+		\item Then clearly $ f(x) \ is \ defined \iff  \exists z \ T(e,x,z)$
+		\item let $S(x,z) = T(e,x,z)$, clearly $S(x,z) $ is primative recursive and $ \exists y \ R(x,y) \iff  \exists z \ T(e,x,z)$.
+	\end{itemize}
+\qed
+% question 4
+\item \proc{Proof:}
+	\begin{itemize}[label ={}]
+		\item Now consider the case $\exists \ \leq$, say $A $ is $\exists x\leq t \ B(x)$, and this is in \textbf{TA}. Since this is a sentence, and by definition of  $\exists x\leq t$, we know $x$ cannot occur in $t$, it follows that $t$ is a closed term. Thus by Lemma A, \textbf{RA} can prove $t = s_n$ for some $n$.
+		\item Now we do a induction on $n$
+			\begin{itemize}[label ={}]
+				\item  Base Case: n=0, then we have $\exists x\leq 0 \ B(x)$. By axiom $P7$ we have
+				$x = 0$, then $\exists x\leq 0 \ B(x)$ is in \textbf{TA} means $B(0)$ is true. So by the induction hypothesis $B(0)$ is in \textbf{$RA_\leq$}. 
+				\item
+				\item Induction Hypothesis: for some $k$, $\exists x\leq s_k \ B(x)$ is in $TA$ then is also in \textbf{$RA_\leq$}.
+				\item
+				\item Inductive Step: $\exists x\leq s(s_k) \ B(x)$ is in \textbf{TA} . By $P8$ we know that 
+				$x\leq s(s_k)  \supset (x \leq s_k \vee x= s(s_k))$.
+				\item Hence we have,
+					\[ \exists x\leq s(s_k) \ B(x) \iff  \exists x\leq s_k \ B(x) \vee B(s(s_k)) \]
+				\item Then $\exists x\leq s(s_k) \ B(x)$ is in \textbf{TA} means $\exists x\leq s_k \ B(x)$ is in \textbf{TA} or $ B(S(s_k))$ is in \textbf{TA}.
+				By induction hypothesis, we know $\exists x\leq s(s_k) \ B(x)$ is in \textbf{$RA_\leq$}. 
+			\end{itemize}
+		Therefore,  if $\exists x\leq t \ B(x)$ is in \textbf{TA} then it is also in  \textbf{$RA_\leq$}. 
+	\end{itemize}
+	\qed
+% question 5
+\item \proc{Proof:}
+	In order to show that $\forall x \forall y\ \ x+y = y+x$, we first show $\forall x  \ \ 0+x = x$ and $\forall x \forall y \ \ sx+y = s(x+y)$, then using them to prove $\forall x \forall y \ \ x+y = y+x$.
+	\begin{itemize}[label ={}]
+	% part 1
+	\item  First let's show $\forall x  \ \ 0+x = x$, we call this property $A1$.
+			\begin{itemize}[label ={}]
+			\item \[ f(x) = 0+x = x\]
+			\item We use the induction axiom $Ind(f(x))$.
+			\item Basis: x = 0
+						\[ 0+0 = 0 \hskip2pc P3 \]
+			\item Inductive Step: $x \leftarrow sx$
+	
+					\begin{align} \nonumber
+                                        			0+sx &= s(0+x)  \hskip2pc  P4\\ \nonumber
+                                        			& = sx \hskip4pc  Inductive \ Hypothesis \nonumber
+                        			\end{align}
+			\item Thus by $Ind(f(x))$, it follows that 
+					\[ \textbf{PA}  \vdash \forall x\  f(x) \]
+			\end{itemize}
+	% part 2
+	\item
+	\item  Then let's show $\forall x \forall y \ \ sx+y = s(x+y)$ and we call this property $A2$.
+			\begin{itemize}[label ={}]
+			\item \[ g(y) = sx+y = s(x+y)\]
+			\item We use the induction axiom $Ind(g(y))$.
+			\item Basis: y = 0
+					\begin{align} \nonumber
+                                        			sx+ 0 &= sx \hskip3pc  P3\\ \nonumber
+                                        				 & = s(x+0)	    \hskip1pc  P3 \nonumber
+                        			\end{align}
+			\item Inductive Step: $y \leftarrow sy$
+	
+					\begin{align} \nonumber
+                                        			sx+sy &= s(sx+y)  \hskip3pc  P4\\ \nonumber
+								&= s(s(x+y))	\hskip2.5pc   Inductive \ Hypothesis \\ \nonumber
+                                        				& = s(x+sy)) 	\hskip3pc  P4 \nonumber
+                        			\end{align}
+			\item Thus by $Ind(g(y))$, it follows that 
+					\[ \textbf{PA}  \vdash \forall x \ \forall y \  g(y) \]
+			\end{itemize}
+	% final
+	\item
+	\item  Finally let's show $\forall x \forall y \ \ x+y = y+x$
+			\begin{itemize}[label ={}]
+			\item \[ A(y) =  x+y = y+x\]
+			\item We use the induction axiom $Ind(A(y))$.
+			\item Basis: y = 0
+					\begin{align} \nonumber
+                                        			x+ 0 &= x \hskip3pc  P3\\ \nonumber
+                                        				 & = 0+x	    \hskip1.5pc  A1 \nonumber
+                        			\end{align}
+			\item Inductive Step: $y \leftarrow sy$
+	
+					\begin{align} \nonumber
+                                        			x+ sy &= s(x+y)  \hskip3pc  P4\\ \nonumber
+								&= s(y+x)\hskip3pc   Inductive \ Hypothesis \\ \nonumber
+                                        				& = sy+x 	\hskip3.5pc  A2 \nonumber
+                        			\end{align}
+			\item Thus by $Ind(A(y))$, it follows that 
+					\[ \textbf{PA}  \vdash \forall x \ \forall y \  A(y) \]
+			\end{itemize}
+	\end{itemize}
+	\qed
+\end{enumerate}
+
+\end{document}

@@ -1,0 +1,215 @@
+\RequirePackage[l2tabu,orthodox]{nag}  % warn about common LaTeX pitfalls
+\RequirePackage[ascii]{inputenc}  % input is 7-bit ASCII
+\RequirePackage{fixltx2e}  % fix LaTeX2e kernel bugs
+
+\documentclass[11pt,twoside]{article}
+\usepackage{color}
+\usepackage{amsthm}
+\usepackage{amsmath}
+
+\makeatletter
+\newcommand{\dotminus}{\mathbin{\text{\@dotminus}}}
+
+\newcommand{\@dotminus}{%
+  \ooalign{\hidewidth\raise1ex\hbox{.}\hidewidth\cr$\m@th-$\cr}%
+}
+\makeatother
+\usepackage{graphicx}
+\graphicspath{ {image/} }
+\usepackage{calc}  % arithmetic in length parameters
+\usepackage{enumitem}  % more control over list formatting
+\usepackage{fancyhdr}  % simpler headers and footers
+\usepackage[margin=1in]{geometry}  % page layout
+\usepackage{lastpage}  % for last page number
+\usepackage{relsize}  % easier font size changes
+\usepackage[normalem]{ulem}  % smarter underlining
+\usepackage{url}  % verb-like typesetting of URLs
+\usepackage{xfrac}  % nicer looking simple fractions for text and math
+\usepackage{longtable}
+\usepackage{tikz}
+\usepackage{array}
+\usepackage{tikz-timing}
+\usetikzlibrary{arrows, shapes, backgrounds,fit}
+\usepackage{tkz-graph}
+% Set up fonts.
+\usepackage[T1]{fontenc}  % use true 8-bit fonts
+\usepackage{slantsc}  % allow slanted small-caps
+\usepackage{microtype}  % perform various font optimizations
+% Use Palatino-based monospace instead of kpfonts' default.
+%\usepackage{newpxtext}
+\ttfamily
+\DeclareFontShape{T1}{\ttdefault}{m}{scsl}{<->ssub*\ttdefault/m/sc}{}
+\DeclareFontShape{T1}{\ttdefault}{b}{scsl}{<->ssub*\ttdefault/b/sc}{}
+% "Kepler" fonts.
+\usepackage[nott,notextcomp]{kpfonts}
+% Use curvier Latin Modern brackets instead of kpfonts' glyphs.
+\DeclareSymbolFont{lmsymb}     {OMS}{lmsy}{m}{n}
+\DeclareSymbolFont{lmlargesymb}{OMX}{lmex}{m}{n}
+\DeclareMathDelimiter{\rbrace}{\mathclose}{lmsymb}{"67}{lmlargesymb}{"09}
+\DeclareMathDelimiter{\lbrace}{\mathopen}{lmsymb}{"66}{lmlargesymb}{"08}
+
+% Page layout: stretch text to fill up page.
+\addtolength\footskip{.25\headheight}
+\flushbottom
+
+% Common list settings.
+
+% Common macros.
+\input{macros}
+\newcommand*\st{\mathrel{|}}  % "such that" for set extension
+
+% Headings.
+\pagestyle{fancy}
+\let\headrule\empty
+\let\footrule\empty
+\lhead{CSC\,418\,H1}
+\chead{\large\scshape Assignment \#\,3}
+\rhead{\scshape Fall 2015}
+\lfoot{\scshape Dept.\@ of Computer Science, University of Toronto,
+       St.~George Campus}
+\cfoot{}
+\rfoot{\scshape page \thepage\space of \pageref{LastPage}}
+
+
+\begin{document}
+\[Rui \ Ji \ (1000340918)\]
+\begin{enumerate}[leftmargin=0pt]
+% question 1
+\item Following is a RM program which computes the function $f(x) = 2x$, suppose $x$ is stored at $R_1$.
+	\begin{itemize}[label = {}]
+		\item $c_0: R_2 \leftarrow 0 \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Z_2$
+		\item $c_1: goto \ 6 \ if \ R_1 = R_2  \ \ \ \ \ \ \ J_{1,2,6}$
+		\item $c_2: R_1 \leftarrow R_1+1  \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S_{1}$
+		\item $c_3: R_2 \leftarrow R_2+1  \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \  S_{2}$
+		\item $c_4: R_2 \leftarrow R_2+1  \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \  S_{2}$
+		\item $c_5: goto \ 1 \ if \ R_1 = R_1  \ \ \ \ \ \ \ J_{1,1,1}$
+		\item $c_6$
+	\end{itemize}
+	First we initialize $R_2$ to be $0$. Command $c_1$ to $c_5$ is a loop, within the loop we add $2$ to $R_2$ each time and add $1$ $R_1$, and we will return $R_1$ when $R_1 = R_2$. \\
+	Note that suppose after $n_{th}$ iteration $R_1 = R_2$, which means $n+x = 2n$ then $n=x \Rightarrow R_1 = 2x$.\\
+	\qed
+% question 2
+\item
+\begin{enumerate}
+\item Since limited subtraction, bounded sum, bounded products  and divisibility are all  primitive recursive,
+	\[Bit(x,i) = 2^{i+1} |( x \dotminus \sum_{t<i} 2^t B(x,t))\]
+	Note 
+	\[2^{i+1} = h(2, i+1) = \prod_{z<i+1}2\]
+	\[2^{t} = h(2, t) = \prod_{z<t}2\]
+	 then $Bit(x,i)$ is also primitive recursive. \\
+	Following is an example computes $Bit(6,0), Bit(6,1), Bit(6,2)$,
+	\begin{itemize}[label ={}]
+	 \item \[Bit(6,0) = 2^{0+1} |( 6 \dotminus \sum_{t<0} 2^t B(6,t))\]
+	  by definition of bound sum we know that 
+	  			\[\sum_{t<0} 2^t B(6,t)=0\]
+	Then 
+				\[Bit(6,0) = 2|(6-0) = 0\]
+	\item 
+	\item  \[Bit(6,1) = 2^{1+1} |( 6 \dotminus \sum_{t<1} 2^t B(6,t))\]
+	 by definition of bound sum we know that 
+	  			\[\sum_{t<1} 2^t B(6,t)=B(6,0) = 0\]
+	Then 
+				\[Bit(6,1) = 4|(6-0) = 1\]
+	\item 
+	\item  \[Bit(6,2) = 2^{2+1} |( 6 \dotminus \sum_{t<2} 2^t B(6,t))\]
+	 by definition of bound sum we know that 
+	  			\[\sum_{t<1} 2^t B(6,t)=2^1B(6,1) = 2\]
+	Then 
+				\[Bit(6,2) = 8|(6-2) = 0\]
+	 \end{itemize}
+\item Suppose $x$ in binary has $n$ bits, we know that $2^{(x-1)} \geq x$ for $( x \in N \wedge 1 \leq x)$, then
+$i$, where $i<x$ cover all $n$ bits of $x$.\\
+	Since bounded sum and $Bit(x,i)$ is primitive recursive,
+ 	 \[NumOnes(x) =  \sum_{i<x} B(x,i)\]
+	 then $NumOnes(x)$ is also primitive recursive. 
+\end{enumerate}
+\qed
+% question 3
+\item
+\begin{enumerate}
+\item $\proc {Claim:}$ $A$ is neither recursive nor r.e. $ A^c$ is r.e but not recursive.
+	\begin{itemize}[label = {}]
+	% $A^c not  r.e$
+	\item First we show that $A$ is not r.e. Notice, it suffices to show that
+			\[K^c \leq_m A\]
+		Thus we want a total computable function $f(x)$ such that
+			\[x \in K^c \iff f(x) \in A \]
+		i.e we want
+			\[ \{x\}_1(x) = \infty \iff dom(\{f(x)\}_1) \subseteq PRIMES\]
+		We can define $f(x)$ implicitly using the S-m-n Theorem as follows:
+			\begin{gather*}
+			\{f(x)\}_1(y) = 
+				\begin{cases}
+				\{x\}_1(x)  & \text{if } y \neq 2\\
+				y  & \text{if } y = 2
+				\end{cases}
+			\end{gather*}
+		\item Thus if $\{x\}_1(x)$ is defined, then $\{f(x)\}_1(y) $ is only defined for all $y \in N$, so $dom(\{f(x)\}_1) \not\subseteq PRIMES$. 
+		\item But if $\{x\}_1(x)$ is undefined then $\{f(x)\}_1(y) $ is undefined for only for $y=2$; hence,  $dom(\{f(x)\}_1) \subseteq PRIMES$. 
+		\item
+	\end{itemize}
+	% $A^c is r.e$
+	\begin{itemize}[label = {}]
+	\item Now we we want to show that $A^c$ is is r.e.
+		\[A^c = \{x|  dom(\{x\}_1) \not\subseteq PRIMES\}\]
+	\item Notice that $x \in A^c$ iff there is some input $u$ and some $v$ such that $v$ codes a halting computation of program $\{x\}$ on input $u$, and $u$ is not a prime. Using the T-predicate, we have,
+		\[x \in A^c \leftrightarrow \exists u \ \exists v \ [T(x,u,v) \wedge \neg Prime(u)] \]
+	\item using a pairing function  to combine both existential quantifiers into one quantifier,
+		\[ x \in A^c \leftrightarrow \exists z \ [T(x,K(z),L(z)) \wedge \neg Prime(K(z))]\]
+	\item We get the form $x \in A^c \leftrightarrow \exists z \ R(x,z)$ where $R$ is recursive. Hence $A^c$ is r.e. 
+	\end{itemize}
+	It follows that $A$ is not recursive, and hence $A^c$ is not recursive. It also follows that $A$ is not r.e., because otherwise $A$ would be recursive. 
+
+\item $\proc {Claim:}$  $B$ is r.e but not recursive, $B^c$ is neither recursive nor r.e.
+	\begin{itemize}[label = {}]
+	\item First we show that $B$ is  r.e. Let's define following function $UP(z,x)$
+	\item  \[UP(z,x)= U(min \ y < (A(z_0,x)+ z)   \ T(z_{1}, x, y))\]
+        		\begin{itemize}
+        		\item	 It is clear that $UP(z,x)$ is a total function, since $U,min, A,T$ are all total function.
+        		\item Also for each $e \in N$, the unary function $UP(e,x)$ is primitive recursive, since $U, A,T$ are primitive recursive function and $min \ y < (A(z_0,x)+ z)$ is bounded for each $x$; hence, $UP(e,x)$ is primitive recursive.
+        		\item For each unary primitive recursive function $f(x)$, there exist $Ackermann's\ Function$ $A_n(x)$, such that $A(n,x) + B > f(x)$; Hence,  exist  some $k$ such that $A(n,x) + B > Comp_{\proc P}(x)$, where ${\proc P}$ computes $f$.
+        	
+        			\begin{itemize}[label={}]
+        			\item Every primitive recursive function $f(\vec x)$ is computable by a RM program $\proc P$ such that the function $Comp_{\proc P}(\vec x)$ is primitive recursive, where
+        		\[ Comp_{\proc P} (\vec x) \ is \ the \ number \ coding \ the \ computation \ of \proc \ P \ on \ input\ \vec x\]
+        			\end{itemize}
+			using KNFT we have,	
+					\[f(x) =  U(min \ y < (A(k,x)+ B)   \ T(\#\proc P, x, y)) \]		
+			let $z_0 = max(A,B)$, $z_1 = \#\proc P$ and $z = 2^{z_0}2^{z_1}$, we have
+					\[f(x) = U(min \ y < (A(z_0,x)+ z)   \ T(z_{1}, x, y))\]
+			hence, for each unary primitive recursive function $f(x)$, there exist some $e \in N$ such that $f(x) = UP(e,x)$.
+		\end{itemize}
+		Then we have $B = ran(UP)$, which means B is r.e.
+	
+	\end{itemize}
+	\begin{itemize}[label ={}]
+	\item Now we show that $B$ is  not recursive. 
+	\item Intuitively $B \neq N$, then $B$ is not recursive
+	It follows that $B$ is not recursive, and hence $B^c$ is not recursive. It also follows that $B^c$ is not r.e., because otherwise $B$ would be recursive. 
+	\end{itemize}
+\end{enumerate}
+% question 4
+\item
+\begin{enumerate}
+\item \begin{itemize}[label = {}]
+	\item Let $\#\proc{p}$ be the number encoding the RM program $\proc{p}$.
+	\item
+	\item $STATE_\proc{p}(\vec x,0 ) = g(\vec x) = p_0^0p_1^{x-1}...p_n^{x_n}$
+	\item $STATE_\proc{p}(\vec x,t+1) = Nex(STATE_\proc{p}(\vec x,t), \#\proc{p})$
+	\item
+	\item Note $g(\vec x)$ is primitive recursive; hence, $g(\vec x) \in \varepsilon$, also we assuming that $Nex(u,z) \in \varepsilon$, where $Nex(u,z) = u$ if $u$ is the halting states,  then we can get $STATE_\proc{p}(\vec x,t )$ is also in $\varepsilon$.
+	\item
+	\end{itemize}
+\item \begin{itemize}[label = {}]
+	\item For any $f \in \mathcal{C}$, suppose program $p$ computes f, by definition we know that there exist $k \in N$ such that $Time_\proc{p}(\vec x) \leq E_k(x_1+x_2+...+x_n)$, which means $f(x)$ will halt within $E_k(x_1+x_2+...+x_n)$ steps.
+	\item Using KNFT we can get $f(\vec x) = U(min \ y<E_k(x_1+x_2+...+x_n)\ \   T(\#\proc{p}, \vec x, STATE_\proc{p}(\vec x,y)))$, where$T(x,y,z)$ is Kleene $T$ predicate.
+	\item Since $U, T, min$ are all primitive recursive; hence, $U, T, min \in \varepsilon$, also we know that 
+	$E_k \in \varepsilon$; therefore, $f \in \varepsilon$. Then we get $\mathcal C \in \varepsilon$.
+	\end{itemize}
+	\qed
+\end{enumerate}
+
+
+\end{enumerate}
+
+\end{document}
